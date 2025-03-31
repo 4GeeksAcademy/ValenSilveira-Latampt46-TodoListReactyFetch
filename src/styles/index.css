@@ -55,14 +55,7 @@ body {
     opacity: 1;
   }
   
-  button {
-    background: none;
-    border: none;
-    color: red;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
+ 
   
 
   
