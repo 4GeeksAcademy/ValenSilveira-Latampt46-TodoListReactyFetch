@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 const API_URL = "https://playground.4geeks.com/todo"
 
 
-
-
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
+ 
 
   //crea usuario
   const createUser = async () => {
+   
     try {
       const response = await fetch(API_URL + "/users/ValenSilveira", {
         method: "POST",
@@ -24,6 +24,7 @@ export default function TodoList() {
       } else {
         const data = await response.json();
         console.log("Usuario creado:", data);
+        console.log(createuser)
       }
     } catch (error) {
       console.error("Error al crear usuario:", error);
@@ -88,11 +89,9 @@ export default function TodoList() {
         console.error("Error al añadir tarea:", response.status);
         return;
       }
-
       const data = await response.json();
-      console.log("Tareas actualizadas:",data);
-
-      setTasks(data,todos);
+      setTasks(data.todos); // Actualiza el estado con los datos de la API
+      console.log("Tareas actualizadas:", data.todos);
     } catch (error) {
       console.error("Error al añadir tarea:", error);
     }
@@ -102,8 +101,7 @@ export default function TodoList() {
     try {
       const response = await fetch(API_URL + "/users/ValenSilveira", {
         method: "DELETE", 
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ todos: [] }) // Envía una lista vacía
+      
       });
 
       if (response.status) {
@@ -115,7 +113,10 @@ export default function TodoList() {
       console.error("Error al eliminar la lista:", error);
     }
   };
-
+  
+  const removeTask = (index) => {
+    setTasks(tasks.filter((_, i) => i !== index));
+  };
 
   return (
     <div>
@@ -134,11 +135,13 @@ export default function TodoList() {
           tasks.map((task, index) => (
             <li key={index}>
               {task.label}
+              <button onClick={() => removeTask(index)}>❌</button>
             </li>
           ))
           
         )}
-    </ul>
+      </ul>
+      <p>Tareas pendientes: {tasks.length}</p>
     <button onClick={handleClearList} style={{padding: "10px 20px", fontSize: "16px"}}>Limpiar lista</button>
    </div >
   );
